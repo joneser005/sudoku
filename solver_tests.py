@@ -1,6 +1,6 @@
 import unittest
 from sudokuset import SudokuSet
-from solver import *
+import solver
 
 # hard, KC Star 3/12
 hard = [
@@ -40,30 +40,30 @@ class TestSolver2(unittest.TestCase):
             self.assertTrue(9 >= len(x))
      
     def test_getbox(self):
-        b = get_box(self.ws, 0)
+        b = solver.get_box(self.ws, 0)
 #         print('b={}'.format(b))
         self.assert_cell(b[0], 3)
         self.assert_cell(b[2], 4)
         self.assert_cell(b[3], 2)
         self.assert_cell(b[7], 6)
 
-        b = get_box(self.ws, 4)
+        b = solver.get_box(self.ws, 4)
         self.assert_cell(b[1], 8)
         self.assert_cell(b[2], 9)
         self.assert_cell(b[4], 1)
         self.assert_cell(b[7], 3)
   
     def test_get_row(self):
-        r = get_row(self.ws, 0)
+        r = solver.get_row(self.ws, 0)
         self.assert_cell(r[0], 3)
         self.assert_cell(r[2], 4)
         
-        r = get_row(self.ws, 8)
+        r = solver.get_row(self.ws, 8)
         self.assert_cell(r[6], 6)
         self.assert_cell(r[8], 2)
 
     def test_get_col(self):
-        c = get_col(self.ws, 0)
+        c = solver.get_col(self.ws, 0)
         self.assertTrue(9 == len(c))
         self.assert_cell(c[0], 3)
         self.assert_cell(c[1], 2)
@@ -71,21 +71,21 @@ class TestSolver2(unittest.TestCase):
         self.assert_cell(c[5], 9)
         
     def test_get_knowns(self):
-        row = get_row(self.ws, 0)
+        row = solver.get_row(self.ws, 0)
         self.assertTrue(3 in row[1])
         self.assertTrue(2 in row[1])
         self.assertTrue(4 in row[1])
-        k = get_knowns(row)
+        k = solver.get_knowns(row)
         self.assertTrue(3 in k)
         self.assertTrue(4 in k)
         self.assertTrue(2 not in k)
                                        
     def test_remove_knowns(self):
-        r = get_col(self.ws, 2)
+        r = solver.get_col(self.ws, 2)
         pre = []
         for x in r:
             pre.append(len(x))
-        remove_knowns(r)
+        solver.remove_knowns(r)
         post = []
         for x in r:
             post.append(len(x))
@@ -93,7 +93,7 @@ class TestSolver2(unittest.TestCase):
     def test_do_exclusive_pairs(self):
         r = [1,2,3,4,5,6,0,0,0]
         w = [SudokuSet(r[i]) for i in range(9)]
-        remove_knowns(w)
+        solver.remove_knowns(w)
         print('type(w[7])={} ,w[7]={}'.format(type(w[7]), w[7]))
         s = set()
         s.add(7)
@@ -101,14 +101,14 @@ class TestSolver2(unittest.TestCase):
         w[8].discard(s)
         
         print(w)
-        do_exclusive_pairs(w)
+        solver.do_exclusive_pairs(w)
         print(w)
         self.assertTrue(len(w[6]) == 1)
     
     def test_do_exclusive_trips(self):
         r = [1,2,3,4,5,0,0,0,0]
         w = [SudokuSet(r[i]) for i in range(9)]
-        remove_knowns(w)
+        solver.remove_knowns(w)
         s = set()
         s.add(6)
         w[6].discard(s)
@@ -117,7 +117,7 @@ class TestSolver2(unittest.TestCase):
         # w[5] still contains a 6, but will have its other members removed
         
         print(w)
-        do_exclusive_trips(w)
+        solver.do_exclusive_trips(w)
         print(w)
         self.assertTrue(len(w[5]) == 1)
 
@@ -130,7 +130,7 @@ class TestSolver2(unittest.TestCase):
         w[6].discard(nine)
         w[7].discard(nine)
         # now only w[8] has a 9
-        do_uniques(w)
+        solver.do_uniques(w)
         self.assert_cell(w[8], 9)
         
     def test_makekey(self):
@@ -138,7 +138,7 @@ class TestSolver2(unittest.TestCase):
         s.add(3)
         s.add(1)
         s.add(2)
-        self.assertTrue('123' == makekey(s))
+        self.assertTrue('123' == solver.makekey(s))
         
 if __name__ == '__main__':
     unittest.main()

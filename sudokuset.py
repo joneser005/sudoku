@@ -16,6 +16,14 @@ class SudokuSet(set):
         ''' Discard n only if it isn't the only value. '''
         if isinstance(n, set) and len(self) > 1:
             self -= n
+    
+    def get_solution(self):
+        ''' Returns single int or '-' if multiples. '''
+        if 1 == len(self):
+            for x in self:
+                return int(x)
+        else:
+            return '-'
 
     @classmethod
     def _wrap_methods(cls, names):

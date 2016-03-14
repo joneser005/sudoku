@@ -38,21 +38,28 @@ def printWorkset(s, w):
         if i%9==0:
             print()
         x = w[i]
-#         if 1 == len(x):
-#             for y in x:
-#                 print('    {}     '.format(y), end="")
-#                 break;
-#         else:
-#             print('- ', end="")
         for a in range(1,10):
             if a in x:
                 print('{}'.format(a), end="")
             else:
                 print('-', end="")
         print(' ', end="")
-#             print(x, end="")
     print()
-    
+
+def printSolution(s, w):
+    print('===== {} ====='.format(s))
+    if 9 == len(w):
+        for i in range(9):
+            print(str(w[i]).translate({ord(','):'',
+                                       ord('['):'',
+                                       ord(']'):''}))
+    else:
+        for i in range(81):
+            if i > 0 and i%9==0:
+                print()
+            print('{} '.format(w[i].get_solution()), end="")
+        print()
+            
 def get_row(m, i):
     ''' Returns array of 9 SudokuSets. '''
     return m[i*9:i*9+9]
@@ -65,7 +72,7 @@ def get_col(m, i):
     return result
 
 def get_box(m, bi):
-    '''
+    ''' 
     Returns array of 9 SudokuSets.
     
     0 1 2
@@ -214,7 +221,9 @@ def solve(m):
 
 
 if __name__ == '__main__':
-    printWorkset('BEFORE', workset)
+    printSolution('Initial', solution)
+#     printWorkset('BEFORE', workset)
     for x in range(10):  # arbitrary # of attempts
         solve(workset)
-    printWorkset('AFTER', workset)
+#     printWorkset('AFTER', workset)
+    printSolution('Solution', workset)  # HACK - only run @ end, this clears the solution
